@@ -1,0 +1,141 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package rentalkendaraan;
+
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.Scanner;
+
+/**
+ *
+ * @author samcro
+ */
+public class RentalKendaraan {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        
+        //inisialisasi variable
+        Scanner input = new Scanner(System.in);
+        String driver;
+        String[] daftarMobil = {"Kijang","Xenia","Alphard","Keluar"};
+        int[] tarifMobil = {300000,450000,700000};
+        int[] tarifDriver = {150000, 250000};
+        
+        //format rupiah
+        DecimalFormat kursIndo = (DecimalFormat) DecimalFormat.getCurrencyInstance();
+        DecimalFormatSymbols formatRp = new DecimalFormatSymbols();
+        formatRp.setCurrencySymbol("Rp. ");
+        formatRp.setMonetaryDecimalSeparator(',');
+        formatRp.setGroupingSeparator('.');
+        kursIndo.setDecimalFormatSymbols(formatRp);
+
+        //program inti
+        while (true){
+            
+            int pilihan, pilihan2 = 0, durasi, total = 0;  
+            System.out.println("== Aplikasi Rental Mobil ==");
+            System.out.println(" Anda mau pilih mobil apa?");
+            System.out.println("===========================");
+            for (int z = 0; z < daftarMobil.length; z++){
+
+                System.out.println("+\t"+(z+1+". ")+daftarMobil[z]+"\t  +");
+
+            }
+            System.out.println("===========================");
+
+            pilihan = input.nextInt();
+            System.out.println("Anda memilih "+daftarMobil[pilihan-1]);
+            if (pilihan == 4){
+                break;
+            }
+            System.out.println("Tarif "+kursIndo.format(tarifMobil[pilihan-1])+"/hari");
+            
+            while (true){
+                
+                System.out.println("Ingin pakai jasa driver? [Y / T]");
+                driver = input.next();
+
+                if (driver.equalsIgnoreCase("y")){
+                    
+                    while (true){
+                        System.out.println("\t\t Anda mau pilih paket apa?");
+                        System.out.println("=================================================================");
+                        System.out.println("+\t 1. Dalam Kota \t12 Jam Kerja "+kursIndo.format(tarifDriver[0])+"/hari \t+");
+                        System.out.println("+\t 2. Luar Kota \t12 Jam Kerja "+kursIndo.format(tarifDriver[1])+"/hari \t+");
+                        System.out.println("=================================================================");
+                        pilihan2 = input.nextInt();
+
+                        if (pilihan2 > 0 && pilihan2 < 3){
+                            break;
+                        }
+                        else System.out.println("Input salah!");
+                    }
+                    
+                    System.out.println("Anda memilih paket "+pilihan2);
+                    
+                    total += ((tarifMobil[pilihan-1] + tarifDriver[pilihan2-1] ) );
+                    break;
+
+                } else if (driver.equalsIgnoreCase("t")){
+
+                    total += (tarifMobil[pilihan-1]);
+                    break;
+
+                } else {
+                    System.out.println("Input harus [Y / T]");
+                }
+            
+            }
+            
+            System.out.println("Mau sewa berapa hari? ");
+            durasi = input.nextInt();
+                    
+            //format tanggal
+            System.out.println("Input tanggal booking. Ex: "+LocalDate.now());
+            String booking = input.next();
+            DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-M-d");
+            LocalDate tanggal = LocalDate.parse(booking,dateFormat);
+            //LocalDate babu = LocalDate.now();
+            
+            while (true){
+                
+                if (tanggal.isBefore(LocalDate.now()) == true){
+
+                    System.out.println("Input harus 'sama' / 'lebih' dari tanggal saat ini");
+                    System.out.println("Input tanggal booking Ex: [2018-05-30]");
+                    booking = input.next();
+                    tanggal = LocalDate.parse(booking,dateFormat);
+
+                }else 
+                    break;
+            
+            }
+            
+            LocalDate tenggat = tanggal.plus(durasi, ChronoUnit.DAYS);
+            
+            
+            // print out hasil
+            System.out.println("=========================================================");
+            if (pilihan2 != 0){
+                System.out.println("+   Harga sewa driver \t\t: "+kursIndo.format(durasi*tarifDriver[pilihan2-1])+"\t+");
+            }
+            System.out.println("+   Harga sewa mobil \t\t: "+kursIndo.format(durasi*tarifMobil[pilihan-1])+"\t+");
+            System.out.println("+   Total bayar \t\t: "+kursIndo.format(total*durasi)+"\t+");
+            System.out.println("+   Tanggal Pengembalian \t: " + tenggat+"\t\t+");
+            System.out.println("=========================================================");
+            
+            System.out.println("");
+        }
+        
+    }
+    
+}
