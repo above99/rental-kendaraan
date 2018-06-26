@@ -62,11 +62,22 @@ public class RentalKendaraan {
             int pilihan, pilihan2 = 0, durasi, total = 0;
             Menu1();
             pilihan = input.nextInt();
-            System.out.println("Anda memilih "+daftarMobil[pilihan-1]);
+            
             
             if (pilihan == 4){
                 break;
             }
+            while (true){
+                if (pilihan > 4 || pilihan < 1) {
+                    
+                    System.out.println("Input Salah!!");
+                    Menu1();
+                    pilihan = input.nextInt();
+                }
+                else break;
+            }
+            System.out.println("Anda memilih "+daftarMobil[pilihan-1]);
+            
             System.out.println("Tarif "+kursIndo.format(tarifMobil[pilihan-1])+"/hari");
             
             while (true){
